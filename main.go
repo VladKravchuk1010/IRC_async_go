@@ -21,6 +21,16 @@ func main() {
 	r := gin.Default()
 
 	r.POST("/set_status", func(c *gin.Context) {
+
+		const secretToken = "SECRET_KEY1227"
+
+		token := c.GetHeader("X-Async-Token")
+
+		if token != secretToken {
+			c.JSON(http.StatusForbidden, gin.H{"error": "Invalid token"})
+			return
+		}
+
 		pk := c.PostForm("pk")
 		if pk == "" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "ID (pk) is required"})
